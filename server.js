@@ -20,39 +20,39 @@ app.use(bodyParser.json())
 app.get('/getData',async(req,res)=>{	
 	const data = await User.find().sort([['total',-1]]);
 	const count = await User.countDocuments()
-	console.log("Jo hego count ko number",count)
-	let m1avg = 0;
-	let m2avg = 0;
-	let m3avg = 0;
+	console.log("Number of students",count)
+	let first_round_avg = 0;
+	let second_round_avg = 0;
+	let third_round_avg = 0;
 	
 	for(let i=0; i<count; i++){
-		m1avg = m1avg + data[i].marks1;
-		m2avg = m2avg + data[i].marks2;
-		m3avg = m3avg + data[i].marks3;
+		first_round_avg = first_round_avg + data[i].first_round;
+		second_round_avg = second_round_avg + data[i].second_round;
+		third_round_avg = third_round_avg + data[i].third_round;
 	}
-	m1avg = m1avg/count;
-	m2avg = m2avg/count;
-	m3avg = m3avg/count;
+	first_round_avg = first_round_avg/count;
+	second_round_avg = second_round_avg/count;
+	third_round_avg = third_round_avg/count;
 
 
 	const winner = data[0]
-	res.json({winner,m1avg,m2avg,m3avg})
+	res.json({winner,first_round_avg,second_round_avg,third_round_avg})
 	})
 
 
 
 app.post('/saveData', async (req, res) => {
-	const { username,email, marks1,marks2,marks3} = req.body
-	const total = marks1+marks2+marks3;
+	const { name,email, first_round,second_round,third_round} = req.body
+	const total = first_round+second_round+third_round;
 	const average = total/3;
 
 	try {
 		const response = await User.create({
-			username,
+			name,
 			email,
-			marks1,
-			marks2,
-			marks3,
+			first_round,
+			second_round,
+			third_round,
 			total,
 			average
 		})
@@ -60,7 +60,7 @@ app.post('/saveData', async (req, res) => {
 	} catch (error) {
 		if (error.code === 11000) {
 			// duplicate key
-			return res.json({ status: 'error', error: 'Username already in use' })
+			return res.json({ status: 'error', error: 'Username or email already in use' })
 		}
 		throw error
 	}
