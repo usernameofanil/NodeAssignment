@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
 		average: { type: Number, required: true },
 
 
-
+		
 	},
 	{ collection: 'users' }
 )
