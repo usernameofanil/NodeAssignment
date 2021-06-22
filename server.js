@@ -16,6 +16,7 @@ app.use(bodyParser.json())
 
 
 
+
 app.get('/getData',async(req,res)=>{	
 	const data = await User.find().sort([['total',-1]]);
 	const count = await User.countDocuments()
